@@ -11,7 +11,6 @@ internal class TestServer
 {
     private static string _ServerIp = "";
     private static int _ServerPort = 0;
-    private static bool _Ssl = false;
     private static WatsonTcpServer _Server = null;
     private static string _CertFile = "";
     private static string _CertPass = "";
@@ -31,26 +30,11 @@ internal class TestServer
     {
         _ServerIp = InputString("Server IP:", "localhost", false);
         _ServerPort = InputInteger("Server port:", 50880, true, false);
-        _Ssl = InputBoolean("Use SSL:", false);
 
         try
         {
-            if (!_Ssl)
-            {
-                _Server = new WatsonTcpServer(_ServerIp, _ServerPort);
-            }
-            else
-            {
-                _CertFile = InputString("Certificate file:", "test.pfx", false);
-                _CertPass = InputString("Certificate password:", "password", false);
-                _AcceptInvalidCerts = InputBoolean("Accept invalid certs:", true);
-                _MutualAuth = InputBoolean("Mutually authenticate:", false);
-
-                _Server = new WatsonTcpServer(_ServerIp, _ServerPort, _CertFile, _CertPass);
-                _Server.Settings.AcceptInvalidCertificates = _AcceptInvalidCerts;
-                _Server.Settings.MutuallyAuthenticate = _MutualAuth;
-            }
-
+            _Server = new WatsonTcpServer(_ServerIp, _ServerPort);
+            
             _Server.Events.ClientConnected += ClientConnected;
             _Server.Events.ClientDisconnected += ClientDisconnected;
             _Server.Events.MessageReceived += MessageReceived;
